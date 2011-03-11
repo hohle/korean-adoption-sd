@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram>
+<source><![CDATA[Us:Parents
+References:Humans
+USAgency:Agency
+USCIS:Government
+KoreanAgency:Agency
+SouthKorea:Government
+Foster:Actor
+/Child:Child[a]
+Birth:Actor
+
+# From Our Side
+Us:USAgency.inquire
+Us:>USAgency.give(application)&
+Us:>USAgency.give(biography)&
+Us:>USAgency.give(parentalPhilosophy)&
+Us:>USAgency.give(financialRecords)&
+Us:fingerprints=USCIS.getFingerprinted
+Us:>USAgency[j].give(references)
+[c:foreach(reference)]
+  USAgency[j]:References.askForRecommendation
+[/c]
+[c:foreach(reference)]
+  References:>USAgency.give(recommendation)&
+[/c]
+Us:>Us.doAdoptionCoursework&
+Us:>Us.makeHeartsAndSeoulBlog&
+USAgency[j]:Us.studyHome
+USAgency[j]:>USAgency.writeHomeStudy&
+USAgency[j]:>USAgency.approveHomeStudy&
+USAgency[j]:>USCIS[t].fileI600A
+Us:fingerprints=USCIS.getFingerprinted&
+USCIS[t]:>Us.confirmI600AApproved&
+USCIS[t]:stop
+Us:>USAgency.relayI600AApproved(I171H)&
+USAgency[j]:stop
+Us:>Us.waitAndRead&
+
+# From the Korean Side
+Birth:Child.new
+Birth:KoreanAgency[c].createAParentingPlan
+KoreanAgency[c]:>Child.provideCare&
+KoreanAgency[c]:Foster.provideCareForChild(child)
+KoreanAgency[c]:>SouthKorea[i].inform
+Foster:Child.provideCare&
+SouthKorea[i]:>Child.setInternationalParentsAllowed(false)&
+SouthKorea[i]:stop
+[c:for(5.months)]
+  KoreanAgency:>SouthKorea[x].findKoreanParents
+[/c]
+SouthKorea[x]:>Child.setInternationalParentsAllowed(true)&
+SouthKorea[x]:stop
+
+# The referral
+KoreanAgency:>USAgency.referChildWaitingForParents
+ USAgency:confirmReferral=Us.referChildWaitingForParents
+Us:>Us.verifyReferral&
+USAgency:>KoreanAgency.confirmReferral&
+
+# Send care packages
+[c:asOftenAsPossible]
+  Us:>USAgency.sendCarePackage(package)&
+  USAgency:>KoreanAgency.sendCarePackage(package)&
+  KoreanAgency:Foster[l].sendCarePackage(package)&
+  Foster[l]:Child.give(toysAndClothes)&
+[/c:loop]
+
+Us:USCIS.fileAdditionalPaperwork&
+
+# Travel Visa
+KoreanAgency:exitVisa=SouthKorea.requestExitVisaForChild
+KoreanAgency:>USAgency.sendExitVisaNotification&
+USAgency:>Us.sendExitVisaNotification&
+Us:>Us.bookAirplaneTicketsToSeoul&
+Us:child=KoreanAgency.pickUpChild
+Us:>Us.comeHomeAsAFamily&
+KoreanAgency[c]:stop
+
+[c:for(6.months)]
+  USAgency:cleanBillOfHealth=Us.monthlyCheckup
+[/c]
+USAgency:stop
+Us:USPassport=USCIS.completeAdoption]]></source>
+<configuration>
+<property name="actorWidth" value="25"/>
+<property name="allowMessageProperties" value="false"/>
+<property name="arrowSize" value="6"/>
+<property name="colorizeThreads" value="true"/>
+<property name="destructorWidth" value="30"/>
+<property family="Dialog" name="font" size="12" style="0"/>
+<property name="fragmentMargin" value="8"/>
+<property name="fragmentPadding" value="10"/>
+<property name="fragmentTextPadding" value="3"/>
+<property name="glue" value="10"/>
+<property name="headHeight" value="35"/>
+<property name="headLabelPadding" value="5"/>
+<property name="headWidth" value="100"/>
+<property name="initialSpace" value="10"/>
+<property name="leftMargin" value="5"/>
+<property name="lineWrap" value="false"/>
+<property name="lowerMargin" value="5"/>
+<property name="mainLifelineWidth" value="8"/>
+<property name="messageLabelSpace" value="3"/>
+<property name="messagePadding" value="6"/>
+<property name="noteMargin" value="6"/>
+<property name="notePadding" value="6"/>
+<property name="opaqueMessageText" value="false"/>
+<property name="returnArrowVisible" value="true"/>
+<property name="rightMargin" value="5"/>
+<property name="selfMessageHorizontalSpace" value="15"/>
+<property name="separatorBottomMargin" value="8"/>
+<property name="separatorTopMargin" value="15"/>
+<property name="shouldShadowParticipants" value="true"/>
+<property name="spaceBeforeActivation" value="2"/>
+<property name="spaceBeforeAnswerToSelf" value="10"/>
+<property name="spaceBeforeConstruction" value="6"/>
+<property name="spaceBeforeSelfMessage" value="7"/>
+<property name="subLifelineWidth" value="6"/>
+<property name="tc0" value="-1118482"/>
+<property name="tc1" value="-256"/>
+<property name="tc2" value="-65536"/>
+<property name="tc3" value="-16776961"/>
+<property name="tc4" value="-16711936"/>
+<property name="tc5" value="-4144960"/>
+<property name="tc6" value="-65281"/>
+<property name="tc7" value="-14336"/>
+<property name="tc8" value="-20561"/>
+<property name="tc9" value="-12566464"/>
+<property name="threadNumbersVisible" value="false"/>
+<property name="threaded" value="true"/>
+<property name="upperMargin" value="5"/>
+<property name="verticallySplit" value="false"/>
+</configuration>
+</diagram>
